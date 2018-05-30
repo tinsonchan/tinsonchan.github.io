@@ -7,7 +7,7 @@
 
     
 
-    <title>about | Tinson&#39;s Blog</title>
+    <title>开篇 | Tinson&#39;s Blog</title>
     <meta name="author" content="John Doe" />
     <meta name="version" content="1.0.0" />
     <meta name="keywords" content="" />
@@ -75,7 +75,7 @@
         
         
         
-        <li class="nav-item active">
+        <li class="nav-item">
             <a class="nav-link" href="/about">关于</a>
         </li>
         
@@ -90,6 +90,8 @@
     <div id="aside-inner" class="aside-inner">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://tinsonchan.github.io"></form>
 
+        
+        
         
         
 
@@ -131,15 +133,15 @@
     <header class="article-header">
         
         <h1 itemprop="name">
-            about
+            开篇
         </h1>
         
         <div class="article-meta clearfix">
-            <a class="article-date" href="/about/index.html">
+            <a class="article-date" href="/2018/05/30/开篇/">
     
     <i class="icon-calendar"></i>
     
-    <time datetime="2018-05-30T11:08:08.000Z" itemprop="datePublished">2018-05-30</time>
+    <time datetime="2018-05-30T15:16:14.000Z" itemprop="datePublished">2018-05-30</time>
 </a>
 
             
@@ -154,6 +156,8 @@
     </section>
 </article>
 
+
+
 </div>
         <footer class="footer">
     Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
@@ -165,6 +169,8 @@
     </div>
 
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/1.9.0/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="/js/scrollspy.min.js"></script>
     
     <script type="text/javascript">
         $(function() {
@@ -186,6 +192,8 @@
                 nodes.navTags.removeClass('tag-show');
             });*/
 
+            
+            $(document.body).scrollspy({target: '#aside-inner'});
             
         });
     </script>
