@@ -14,9 +14,10 @@
     <meta name="description" content="今天突然收到一个需求，就是做弱联网的断线重连。
 拜托，我们游戏是http通信的呀，这如何是好。但是我们技术的童鞋嘛，总会有方法的是吧！
 脑子里一下子就有了方案，就是做一个队列，然后把每次发送的post数据存起来，然后在收到回复的时候，在把队列里对应的删除掉，然后其他的，设置了一个三秒的超时记录，然后每秒去检查一次，如果发现这个超时了，就重发一次。
+
 首先做一个唯一id的存储，主要是方便自己去遍历用的
 private static _sendID : number  = 0;
-private sta" />
+private st" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
     <meta name="baidu-site-verification" content="F0CXvmUgA9" />
@@ -174,6 +175,7 @@ private sta" />
         <p>今天突然收到一个需求，就是做弱联网的断线重连。</p>
 <p>拜托，我们游戏是http通信的呀，这如何是好。但是我们技术的童鞋嘛，总会有方法的是吧！</p>
 <p>脑子里一下子就有了方案，就是做一个队列，然后把每次发送的post数据存起来，然后在收到回复的时候，在把队列里对应的删除掉，然后其他的，设置了一个三秒的超时记录，然后每秒去检查一次，如果发现这个超时了，就重发一次。</p>
+<a id="more"></a>
 <p>首先做一个唯一id的存储，主要是方便自己去遍历用的</p>
 <pre><code>private static _sendID : number  = 0;
 private static getSendID() : number{
