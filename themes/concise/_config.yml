@@ -1,0 +1,64 @@
+# Header
+menu:
+  首页: /
+  技术: categories/technics
+  读书: categories/reading
+  生活: categories/life
+  其他: categories/other
+  标签: javascript:;
+  关于: about
+
+# Content
+excerpt_link: 阅读更多
+
+# auto_excerpt:
+# enable: true
+# length: 150
+# excerpt_link: 阅读更多
+
+# Sidebar
+author:
+  name: Tinson
+  work: 游戏开发
+  location: 广州
+  avatar_url: /images/avatar.jpg
+
+links:
+  github: https://github.com/tinsonchan
+
+
+# widgets:
+# - category
+# - tag
+# - tagcloud
+# - archive
+# - recent_posts
+
+# display widgets at the bottom of index pages (pagination == 2)
+# index_widgets:
+# - category
+# - tagcloud
+# - archive
+
+# widget behavior
+# show_count: false
+# archive_type: 'monthly'
+
+# Disqus
+disqus:
+  enable: false
+  shortname: name    #your name
+  # count: true
+
+# 友盟统计
+# umeng:
+#   prefix: s13
+#   id: 1234567890
+
+# Miscellaneous
+google_analytics:
+favicon: /images/favicon.png
+twitter:
+google_plus:
+fb_admins:
+fb_app_id:
