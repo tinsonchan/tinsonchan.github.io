@@ -2,6 +2,8 @@
 title: {{ title }}
 date: {{ date }}
 comments: false
+categories:
+- 技术
 tags:
 ---
 
