@@ -81,6 +81,15 @@ tags:
 	主要是到下面这个地址去修改
 	https://github.com/tinsonchan/tinsonchan.github.io/settings/branches
 
+### 编写新的日志 ###
+1. git pull -更新日志目录
+2. hexo new "内容标题"
+3. 编辑 博客内容
+4. hexo d -g -生成博客网页内容
+5. git add . -添加版本管理
+6. git commit -m "提交版本内容"
+7. git push -更新到远程库
+
 ### 结束 ###
 完成以上步骤之后，我们就把整个工程备份到网络上了，然后再其他机器上只需要完成单机博客安装就可以了。
 
