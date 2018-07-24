@@ -199,5 +199,12 @@ svnadmin是一个java版本的svn管理可视化工具，方便我们多个版�
 	路径:/data/svn/MiniGame
     URl:http://ip/svn/MiniGame
 
+参考链接：
+
+	https://www.cnblogs.com/hujihon/p/5679611.html
+	https://code.google.com/archive/p/jsvnadmin/downloads
+	https://www.linuxidc.com/Linux/2016-09/134941.htm
+	https://www.linuxidc.com/Linux/2017-12/149716.htm
+
 ----------
 追求卓越 成功就会在不经意间追上你
