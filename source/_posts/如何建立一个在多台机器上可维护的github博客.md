@@ -90,6 +90,24 @@ tags:
 6. git commit -m "提交版本内容"
 7. git push -更新到远程库
 
+### 修改 2018-08-16###
+在博客中增加图片
+
+1. 直接把图片放在source/images下面
+
+	(/images/image.jpg)
+
+2. 修改配置
+
+	//_config.yml
+
+	post_asset_folder: true
+
+	//图片路径
+
+	image.jpg
+
+
 ### 结束 ###
 完成以上步骤之后，我们就把整个工程备份到网络上了，然后再其他机器上只需要完成单机博客安装就可以了。
 
