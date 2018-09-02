@@ -39,6 +39,19 @@ tags:
 最后编译出来的文件如图所示
 ![](2.png)
 
+### 备注 ### 
+安装过程中，有几个东西没法安装，解决方法如下
+1.在src下新建golang.net/x目录
+2.checkout 库
+
+	git clone https://github.com/golang/tools.git tools
+	git clone https://github.com/golang/lint.git lint
+
+3.安装没安装的库
+	
+	go install xxx
+	go install golang.org/x/lint/golint
+
 
 
 ----------
