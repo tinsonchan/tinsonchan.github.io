@@ -35,7 +35,7 @@ player: true
 # 是否开启 分享功能: https://github.com/overtrue/share.js
 social_share:
   enable: false
-  sites: qzone, qq, weibo, wechat, douban, google, facebook, twitter
+  sites: qzone, qq, weibo, wechat, douban
   disabled: 
 
 # 是否开启 打赏功能
@@ -72,8 +72,8 @@ footer:
 # 如何开启 评论&统计 插件：https://godbmw.com/passages/2018-11-15-theme-bmw-docs-zh/
 # 请申请自己的 appid 和 appkey，并且替换下面的 appid 和 appkey
 leancloud:
-  appid: Hyq9wkH495DgNHWhDQCOfQSp-gzGzoHsz # 填写您的appid
-  appkey: WaR7nrzhliHj9aVwdQzkdlGd # 填写您的appkey
+  appid: vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz # 填写您的appid
+  appkey: 5xXphnQdhWsutu4Ix4cGB0EW # 填写您的appkey
   comment: true # 是否开启评论系统
   timer: true # 是否开启文章统计
 
