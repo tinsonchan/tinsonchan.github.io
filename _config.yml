@@ -77,7 +77,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: bmw
+theme: ad
 
 auto_excerpt:
     enable: true  #// 博客能否收起
