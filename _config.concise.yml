@@ -7,8 +7,8 @@ title: Tinson's Blog
 subtitle:
 description:
 keywords:
-author: TinsonChan
-language: zh-Hans
+author: John Doe
+language:
 timezone:
 
 # URL
@@ -77,7 +77,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: bmw
+theme: concise
 
 auto_excerpt:
     enable: true  #// 博客能否收起
