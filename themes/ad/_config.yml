@@ -10,7 +10,7 @@ nav_name: TINSON
 # 导航栏座右铭
 motto: "按照计划一步步往前走"
 
-github: "https://tinsonchan.github.io/"
+github: "https://github.com/tinsonchan/"
 
 # 站点图标和APP图标
 favicon: 
@@ -86,10 +86,10 @@ analytics:
 
 reward:
   -
-    src: /images/wechat.png
+    src: ""
     alt: "WeChat"
   -
-    src: /images/alipay.png
+    src: ""
     alt: "AliPay"
 
 nav:

@@ -4,11 +4,10 @@ date: {{ date }}
 comments: false
 categories:
 - 技术
+- golang
 tags:
+- 翻译
 ---
 
 <!--more-->
 
-
-----------
-追求卓越 成功就会在不经意间追上你
