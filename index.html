@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Tinson Chan">
+  
+  
+  <title>Tinson&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="Hexo, Theme-AD">
+  
+
+  
+  <meta name="description" content="天神阁">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz","appkey":"5xXphnQdhWsutu4Ix4cGB0EW","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2018-05-30",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: false,
+    lock: false,
+    author: "Tinson Chan",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">TINSON</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 按照计划一步步往前走</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tinsonchan/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      <div class="home">
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2019-04-11
+            </span>
+            
+              <span>
+                | <a href="/categories/golang/"><i class="fa fa-bookmark"></i>golang</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2019/04/11/Go编程语言规范/">Go编程语言规范</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>本文档只是本人在阅读golang语言规范是翻译的非正规文档，一个是学习英语，一个是让自己去阅读官方文档而已。如果有问题，请多多指出。</p>
+<p><strong>版本：2018年11月16日 || 译者：TinsonChan <a href="mailto:&#x74;&#105;&#110;&#x73;&#111;&#x6e;&#99;&#x68;&#x61;&#x6e;&#64;&#49;&#54;&#x33;&#x2e;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#x74;&#105;&#110;&#x73;&#111;&#x6e;&#99;&#x68;&#x61;&#x6e;&#64;&#49;&#54;&#x33;&#x2e;&#x63;&#111;&#109;</a></strong></p>
+            
+          </div>
+          <a class="home-article-read" href="/2019/04/11/Go编程语言规范/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/翻译/"><i class="fa fa-tags"></i>翻译</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-10-13
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/10/13/electron开篇/">electron开篇</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>以前涉猎过一下MFC，但是没有深入了解，现在什么都讲究跨平台，更是因为vs code的发展，electron变的更加的火热，所以现在入手electron。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/10/13/electron开篇/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/elctron/"><i class="fa fa-tags"></i>elctron</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-10-12
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/10/12/活力跳跳cocos改版小结/">hltt-cocos改版小结</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>本来是在维护自己一直在做的小游戏，突然接到电话，需要去对hltt游戏进行cocos的改写，虽然没正式用过cocos creator来写游戏，但是之前也看过一下，应该没问题的，撸起袖子干。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/10/12/活力跳跳cocos改版小结/">
+            README MORE >>>
+          </a>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-08-16
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/08/16/如何在vsCode上搭建go开发环境/">如何在vsCode上搭建go开发环境</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>最近在学习golang，但是如果有一个比较友好的ide，就可以提高不少效率，以前一直在用sublime的我，现在决定用vscode了，接下里的步骤，可以部署一个在vscode下直接运行的go ide。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/08/16/如何在vsCode上搭建go开发环境/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/golang/"><i class="fa fa-tags"></i>golang</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-08-07
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/08/07/ARTS-2018-08-07/">ARTS-2018-08-07</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>##第一个星期##</p>
+<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="algorithm"></a>algorithm</h3><p>Two Sum<br>Given an array of integers, return indices of the two numbers such that they add up to a specific target.</p>
+<p>You may assume that each input would have exactly one solution, and you may not use the same element twice.</p>
+            
+          </div>
+          <a class="home-article-read" href="/2018/08/07/ARTS-2018-08-07/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/ARTS/"><i class="fa fa-tags"></i>ARTS</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-07-24
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/07/24/程序员修养读后感/">程序员修养读后感</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>很少会很正经的去写类似这样的文章，而加入耗子叔的群必须写一篇读后感，那就以此开始，也为后面的知识积累做铺垫。</p>
+<p>开始工作到现在已经有六年了，一直以来都觉得自己是半桶水，不上不下的，而耗子叔开的系列”程序员练级攻略（2018）”刚好可以让我可以一点点的把自己的知识点捡起来。</p>
+            
+          </div>
+          <a class="home-article-read" href="/2018/07/24/程序员修养读后感/">
+            README MORE >>>
+          </a>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-07-24
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/07/24/如何部署svn服务器/">如何部署svn服务器</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>时间过的好快呀，一眨眼又是一个月过去了，距离上次写日志已经是一个月了。最近在研究svn服务器的东西，主要是为了让多人协助的时候，可以很好的做一个权限控制。虽然git也是挺好用的，但是权限控制还是不够，毕竟站在公司角度，还是希望这方面可以做的比较好一点。所以最近在自己购买的搬瓦工的机器上实验了一下，还是可以的，呵呵呵。现在有一种强迫症，就是一个东西开始了，就必须强迫自己完成，不能再像之前那样做到一半就放弃了。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/07/24/如何部署svn服务器/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/svn/"><i class="fa fa-tags"></i>svn</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-06-28
+            </span>
+            
+              <span>
+                | <a href="/categories/life/"><i class="fa fa-bookmark"></i>生活</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/06/28/2018上半年小结/">2018上半年小结</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>不知不觉2018过去了一半，而生活也发生了一些变化，想用短短的一篇文章来总结一下上半年发生的事情，以及对下半年的一些展望。<br>人生最难超越的就是自己，最难懂的也是自己。如果想要让自己的生活变得更加的美好，就必须有一个明确的目标，并且按照这个目前往前走。写下这篇日志，也是后面让自己来回顾的。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/06/28/2018上半年小结/">
+            README MORE >>>
+          </a>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-06-05
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/06/05/物理球球小游戏开发过程中遇到的问题/">物理球球小游戏开发过程中遇到的问题</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>从过年回来到现在，不知不觉接触白鹭已经有三四个月了，而这段时间也把《物理弹球正版》的h5版本做起来了，不说收益，只说活跃用户的化，我也满足了，日活百万，这是工作这么久做的第一款这么多人玩的游戏。<br>项目从一个人到多个人，从一个简单的小游戏到现在的集合多个系统模块的游戏，现在维护起来有一定的困难，合作也不是特别的流畅，所以这里把这一个过程捋一下，也算是给自己一个教训吧。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/06/05/物理球球小游戏开发过程中遇到的问题/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/小游戏/"><i class="fa fa-tags"></i>小游戏</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+    <div class="home-article-wrapper clearfix">
+      <div class="home-article" data-cover="false">
+        <div class="home-article-inner" data-cover="false">
+          <div class="passage-meta">
+            <span>
+              <i class="fa fa-calendar"></i>2018-06-02
+            </span>
+            
+              <span>
+                | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+              </span>
+            
+            
+              <span>
+                | <i class="fa fa-unlock-alt"></i>UNLOCK
+              </span>
+            
+          </div>
+          <h1 class="home-article-title">
+            <a href="/2018/06/02/如何建立一个在多台机器上可维护的github博客/">如何建立一个在多台机器上可维护的github博客</a>
+          </h1>
+          <div class="home-article-content passage-article">
+            
+              <p>前几天跟着网上的教程，已经把博客搭建起来了。但是考虑到自己有一台主机和一台笔记本，如果能做到随时随地的写博客，而不用一定要回到家里才能过写，那才是真正的方便。而且，这样有利于把整个博客工程备份起来，不然如果哪一天出问题了，那就后悔都来不及了，因为你已经找不回自己的文件了。</p>
+<p>当然百度是无所不能的，能够解决你在技术上的一切问题。而记录此篇文章，纯粹是为了以后可以自己翻查，重新再次部署时可以快速切入，而不用再一点点的边度了。<br>
+            
+          </p></div>
+          <a class="home-article-read" href="/2018/06/02/如何建立一个在多台机器上可维护的github博客/">
+            README MORE >>>
+          </a>
+          
+            <div class="passage-tags">
+             
+              <a href="/tags/github/"><i class="fa fa-tags"></i>github</a>
+            
+            </div>
+          
+        </div>
+        
+      </div>
+    </div>
+  
+</div>
+    </main>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title"></h5>
+        
+          <span class="site-footer-item">
+            <a href="" target="_self"></a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: tinsonchan@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/page/2/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="false" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="javascript:void(0);" data-enable="false">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

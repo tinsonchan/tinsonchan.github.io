@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Tinson Chan">
+  
+  
+  <title>Go编程语言规范 | Tinson&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="golang,翻译,">
+  
+
+  
+  <meta name="description" content="本文档只是本人在阅读golang语言规范是翻译的非正规文档，一个是学习英语，一个是让自己去阅读官方文档而已。如果有问题，请多多指出。版本：2018年11月16日 || 译者：TinsonChan &amp;#x74;&amp;#105;&amp;#110;&amp;#x73;&amp;#111;&amp;#x6e;&amp;#99;&amp;#x68;&amp;#x61;&amp;#x6e;&amp;#64;&amp;#49;&amp;#54;&amp;#x33;&amp;#x2e;&amp;#x63;&amp;#111;&amp;#109;">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz","appkey":"5xXphnQdhWsutu4Ix4cGB0EW","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2018-05-30",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "Tinson Chan",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">TINSON</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 按照计划一步步往前走</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tinsonchan/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2019-04-11
+    </span>
+    
+      <span>
+        | <a href="/categories/golang/"><i class="fa fa-bookmark"></i>golang</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    Go编程语言规范
+  </h1>
+  
+  <article class="passage-article">
+    <p>引言&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;下标表达式<br>记法&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;切片表达式<br>源码的表示&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;类型断言<br>&emsp;&emsp;字符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;调用<br>&emsp;&emsp;字母和数字&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;传递实参至…形参<br>词法元素&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;操作符<br>&emsp;&emsp;注释&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;算数操作符<br>&emsp;&emsp;标记&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;比较操作符<br>&emsp;&emsp;分号&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;逻辑操作符<br>&emsp;&emsp;标识符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;地址操作符<br>&emsp;&emsp;关键字&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;接收操作符<br>&emsp;&emsp;运算符与分隔符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;类型转换<br>&emsp;&emsp;整数字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;常量表达式<br>&emsp;&emsp;浮点数字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;求值顺序<br>&emsp;&emsp;虚数字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;语句<br>&emsp;&emsp;符文字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;终止语句<br>&emsp;&emsp;字符串字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;空语句<br>常量&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;标签语句<br>变量&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;表达式语句<br>类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;发送语句<br>&emsp;&emsp;方法集&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;递增递减语句<br>&emsp;&emsp;布尔类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;赋值<br>&emsp;&emsp;数值类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;If语句<br>&emsp;&emsp;字符串类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Switch语句<br>&emsp;&emsp;数组类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;For语句<br>&emsp;&emsp;切片类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Go语句<br>&emsp;&emsp;结构类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Select语句<br>&emsp;&emsp;指针类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Return语句<br>&emsp;&emsp;函数类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Break语句<br>&emsp;&emsp;接口类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Continue语句<br>&emsp;&emsp;映射类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Goto语句<br>&emsp;&emsp;信道类型&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Fallthrough语句<br>类型与值的性质&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Defer语句<br>&emsp;&emsp;类型标识&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;内建函数<br>&emsp;&emsp;可赋值性&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;关闭<br>&emsp;&emsp;可代表性&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;长度与容量<br>块&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;分配<br>声明与作用域&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;创建切片、映射与信道<br>&emsp;&emsp;标签作用域&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;追加与复制切片<br>&emsp;&emsp;空白标识符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;映射元素的删除<br>&emsp;&emsp;预声明标识符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;复数操作<br>&emsp;&emsp;可导出标识符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;恐慌处理<br>&emsp;&emsp;标识符的唯一性&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;引导<br>&emsp;&emsp;常量声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;包<br>&emsp;&emsp;Iota&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;源文件的组织<br>&emsp;&emsp;类型声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;包子句<br>&emsp;&emsp;变量声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;导入声明<br>&emsp;&emsp;短变量声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;一个例子包<br>&emsp;&emsp;函数声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;程序初始化与执行<br>&emsp;&emsp;方法声明&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;零值<br>表达式&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;包初始化<br>&emsp;&emsp;操作数&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;程序执行<br>&emsp;&emsp;限定标识符&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;错误<br>&emsp;&emsp;复合字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;运行时恐慌<br>&emsp;&emsp;函数字面&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;系统考虑<br>&emsp;&emsp;主表达式&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;包 unsafe<br>&emsp;&emsp;选择者&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;大小与对齐保证<br>&emsp;&emsp;方法表达式&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<br>&emsp;&emsp;方法值&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</p>
+<p>##Introduction引言</p>
+<p>This is a reference manual for the Go programming language. For more information and other documents, see golang.org.<br>这是一份关于Go语言的参考手册。欲获取更多信息与文档， 请访问<a href="http://golang.org。" target="_blank" rel="noopener">http://golang.org。</a></p>
+<p>Go is a general-purpose language designed with systems programming in mind. It is strongly typed and garbage-collected and has explicit support for concurrent programming. Programs are constructed from packages, whose properties allow efficient management of dependencies.<br>Go是通用型编程语言，它为系统编程而设计。它是强类型化的语言，具有垃圾回收机制，并显式支持并发编程。 程序由包构造，以此来提供高效的依赖管理功能。当前实现使用传统的“编译-链接”模型来生成可执行的二进制文件。</p>
+<p>The grammar is compact and regular, allowing for easy analysis by automatic tools such as integrated development environments.<br>其语法紧凑而规则，便于IDE等自动化工具分析。</p>
+<h2 id="Notation记法"><a href="#Notation记法" class="headerlink" title="Notation记法"></a>Notation记法</h2><p>The syntax is specified using Extended Backus-Naur Form (EBNF):<br>语法使用扩展巴克斯-诺尔范式（EBNF）定义：</p>
+<blockquote>
+<p>Production  = production_name “=” [ Expression ] “.” .<br>Expression  = Alternative { “|” Alternative } .<br>Alternative = Term { Term } .<br>Term        = production_name | token [ “…” token ] | Group | Option | Repetition .<br>Group       = “(“ Expression “)” .<br>Option      = “[“ Expression “]” .<br>Repetition  = “{“ Expression “}” .</p>
+</blockquote>
+<blockquote>
+<p>生成式 = 生成式名 “=” [ 表达式 ] “.” .<br>表达式 = 选择项 { “|” 选择项 } .<br>选择项 = 条目 { 条目 } .<br>条目   = 生成式名 | 标记 [ “…” 标记 ] | 组 | 可选项 | 重复项 .<br>组     = “(“ 表达式 “)” .<br>可选项 = “[“ 表达式 “]” .<br>重复项 = “{“ 表达式 “}” .  </p>
+</blockquote>
+<p>Productions are expressions constructed from terms and the following operators, in increasing precedence:<br>生成式由表达式构造，表达式通过术语及以下操作符构造，自上而下优先级递增（低=&gt;高）：</p>
+<blockquote>
+<p>|   alternation<br>()  grouping<br>[]  option (0 or 1 times)<br>{}  repetition (0 to n times)  </p>
+</blockquote>
+<p>|   选择<br>()  分组<br>[]  可选 （0 或 1 次）<br>{}  重复 （0 到 n 次）  </p>
+<p>Lower-case production names are used to identify lexical tokens. Non-terminals are in CamelCase. Lexical tokens are enclosed in double quotes “” or back quotes <code>.  
+小写生成式名用于确定词法标记。非最终（Non-terminals）词法标记使用驼峰记法（CamelCase）。 置于双引号 &quot;&quot; 或反引号</code> 中的为词法标记。</p>
+<p>The form a … b represents the set of characters from a through b as alternatives. The horizontal ellipsis … is also used elsewhere in the spec to informally denote various enumerations or code snippets that are not further specified. The character … (as opposed to the three characters …) is not a token of the Go language.<br>形式 a … b 表示把从 a 到 b 的字符集作为选择项。 横向省略号 … 也在本文档的其它地方非正式地表示各种列举或简略的代码片断。 单个字符 …（不同于三个字符 …）并非Go语言本身的标记。</p>
+<h2 id="Source-code-representation-源码的表示"><a href="#Source-code-representation-源码的表示" class="headerlink" title="Source code representation 源码的表示"></a>Source code representation 源码的表示</h2><p>Source code is Unicode text encoded in UTF-8. The text is not canonicalized, so a single accented code point is distinct from the same character constructed from combining an accent and a letter; those are treated as two code points. For simplicity, this document will use the unqualified term character to refer to a Unicode code point in the source text.<br>源码是采用UTF-8编码的Unicode文本。 该文本是非标准化的，因此单一的着重号码点不同于结合了字母与着重号的字符结构， 那些应当视为两个码点。为简单起见，本文档将使用未限定的术语字符在源文本中代替Unicode码点。</p>
+<p>Each code point is distinct; for instance, upper and lower case letters are different characters.<br>每个码点都是不同的，例如，大写与小写的字母就是不同的字符。</p>
+<p>Implementation restriction: For compatibility with other tools, a compiler may disallow the NUL character (U+0000) in the source text.<br>实现限制：为兼容其它工具，编译器会阻止字符NUL（U+0000）出现在源码文本中。</p>
+<p>Implementation restriction: For compatibility with other tools, a compiler may ignore a UTF-8-encoded byte order mark (U+FEFF) if it is the first Unicode code point in the source text. A byte order mark may be disallowed anywhere else in the source.<br>实现限制：为兼容其它工具，若UTF-8编码的字节序标记（U+FEFF）为源文本中的第一个Unicode码点， 编译器就会忽略它。</p>
+<h3 id="Characters-字符"><a href="#Characters-字符" class="headerlink" title="Characters 字符"></a>Characters 字符</h3><p>The following terms are used to denote specific Unicode character classes:<br>具体的Unicode字符类别由以下术语表示：</p>
+<blockquote>
+<p>newline        = /<em> the Unicode code point U+000A </em>/ .<br>unicode_char   = /<em> an arbitrary Unicode code point except newline </em>/ .<br>unicode_letter = /<em> a Unicode code point classified as “Letter” </em>/ .<br>unicode_digit  = /<em> a Unicode code point classified as “Number, decimal digit” </em>/ .  </p>
+</blockquote>
+<blockquote>
+<p>换行符      = /<em> Unicode码点 U+000A </em>/ .<br>unicode字符 = /<em> 除newline以外的任意Unicode码点 </em>/ .<br>unicode字母 = /<em> 类型为“字母”的Unicode码点 </em>/ .<br>unicode数字 = /<em> 类型为“十进制数字”的Unicode码点 </em>/ .  </p>
+</blockquote>
+<p>In The Unicode Standard 8.0, Section 4.5 “General Category” defines a set of character categories. Go treats all characters in any of the Letter categories Lu, Ll, Lt, Lm, or Lo as Unicode letters, and those in the Number category Nd as Unicode digits.<br>在Unicode标准6.2， 章节4.5 “一般类别” 中定义了字符集类别。 其中类别Lu，Ll，Lt，Lm及Lo被视为Unicode字母，类别Nd被视为Unicode数字。</p>
+<h3 id="Letters-and-digits字母和数字"><a href="#Letters-and-digits字母和数字" class="headerlink" title="Letters and digits字母和数字"></a>Letters and digits字母和数字</h3><p>The underscore character _ (U+005F) is considered a letter.<br>下划线字符_（U+005F）被视为一个字母。</p>
+<blockquote>
+<p>letter        = unicode_letter | “_” .<br>decimal_digit = “0” … “9” .<br>octal_digit   = “0” … “7” .<br>hex_digit     = “0” … “9” | “A” … “F” | “a” … “f” .  </p>
+</blockquote>
+<blockquote>
+<p>字母         = unicode字母 | “_” .<br>十进制数字   = “0” … “9” .<br>八进制数字   = “0” … “7” .<br>十六进制数字 = “0” … “9” | “A” … “F” | “a” … “f” .  </p>
+</blockquote>
+<h2 id="Lexical-elements-词法元素"><a href="#Lexical-elements-词法元素" class="headerlink" title="Lexical elements 词法元素"></a>Lexical elements 词法元素</h2><p>###Comments 注释 ###<br>Comments serve as program documentation. There are two forms:<br>注释有两种形式：</p>
+<ol>
+<li>Line comments start with the character sequence // and stop at the end of the line.<br>General comments start with the character sequence /<em> and stop with the first subsequent character sequence </em>/.<br>行注释 以// 开始，至行尾结束。一条行注释视为一个换行符。</li>
+<li>A comment cannot start inside a rune or string literal, or inside a comment. A general comment containing no newlines acts like a space. Any other comment acts like a newline.<br>块注释 以 /<em> 开始，至 </em>/ 结束。 块注释在包含多行时视为一个换行符，否则视为一个空格。</li>
+</ol>
+<h3 id="Tokens标记"><a href="#Tokens标记" class="headerlink" title="Tokens标记"></a>Tokens标记</h3><p>Tokens form the vocabulary of the Go language. There are four classes: identifiers, keywords, operators and punctuation, and literals. White space, formed from spaces (U+0020), horizontal tabs (U+0009), carriage returns (U+000D), and newlines (U+000A), is ignored except as it separates tokens that would otherwise combine into a single token. Also, a newline or end of file may trigger the insertion of a semicolon. While breaking the input into tokens, the next token is the longest sequence of characters that form a valid token.<br>标记构成Go语言的词汇。它有4种类型：标识符，关键字， 运算符与分隔符以及字面。空白符由空格（U+0020）， 横向制表符（U+0009），回车符（U+000D）和换行符（U+000A）组成，除非用它来分隔会结合成单个的标记， 否则它将被忽略。此外，换行符或EOF（文件结束符）会触发分号的插入。 当把输入分解为标记时，可形成有效标记的最长字符序列将作为下一个标记。</p>
+<h3 id="Semicolons分号"><a href="#Semicolons分号" class="headerlink" title="Semicolons分号"></a>Semicolons分号</h3><p>The formal grammar uses semicolons “;” as terminators in a number of productions. Go programs may omit most of these semicolons using the following two rules:<br>正式语法使用分号 “;” 作为一些生成式的终止符。Go程序会使用以下两条规则来省略大多数分号：</p>
+<ol>
+<li>When the input is broken into tokens, a semicolon is automatically inserted into the token stream immediately after a line’s final token if that token is<ul>
+<li>an identifier<br>标识符</li>
+<li>an integer, floating-point, imaginary, rune, or string literal<br>整数， 浮点数， 虚数， 符文或 字符串 字面</li>
+<li>one of the keywords break, continue, fallthrough, or return<br>关键字 break， continue， fallthrough 或 return</li>
+<li>one of the operators and punctuation ++, –, ), ], or }<br>运算符与分隔符 ++， –， )， ]或 }</li>
+</ul>
+</li>
+<li>To allow complex statements to occupy a single line, a semicolon may be omitted before a closing “)” or “}”.<br>为允许复合语句占据单行，闭合的 “)” 或 “}” 之前的分号可以省略。</li>
+</ol>
+<p>To reflect idiomatic use, code examples in this document elide semicolons using these rules.<br>为符合习惯用法，本文档中的代码示例将使用这些规则省略分号。</p>
+<h3 id="Identifiers-标识符"><a href="#Identifiers-标识符" class="headerlink" title="Identifiers 标识符"></a>Identifiers 标识符</h3><p>Identifiers name program entities such as variables and types. An identifier is a sequence of one or more letters and digits. The first character in an identifier must be a letter.<br>标识符被用来命名程序实体，例如变量和类型。一个标识符由一个或多个字母和数字组成。 标识符的第一个字符必须是字母。</p>
+<blockquote>
+<p>identifier = letter { letter | unicode_digit } .<br>标识符 = 字母 { 字母 | unicode数字 } .</p>
+<p>a<br>_x9<br>ThisVariableIsExported<br>αβ  </p>
+</blockquote>
+<p>Some identifiers are predeclared.<br>有些标识符是预声明的。</p>
+<p>###Keywords 关键字 ###<br>The following keywords are reserved and may not be used as identifiers.<br>以下为保留关键字，不能用作标识符。</p>
+<blockquote>
+<p>break&emsp;&emsp;default&emsp;&emsp;func&emsp;&emsp;interface&emsp;&emsp;select<br>case&emsp;&emsp;defer&emsp;&emsp;&emsp;go&emsp;&emsp;&emsp;map&emsp;&emsp;&emsp;&emsp;struct<br>chan&emsp;&emsp;else&emsp;&emsp;&emsp;goto&emsp;&emsp;&emsp;package&emsp;&emsp;switch<br>const&emsp;&emsp;fallthrough  if&emsp;&emsp;&emsp;&emsp;range&emsp;&emsp;&emsp;type<br>continue&emsp;for&emsp;&emsp;&emsp;import&emsp;&emsp;return&emsp;&emsp;&emsp;var</p>
+</blockquote>
+<h3 id="Operators-and-punctuation-运算符与分隔符"><a href="#Operators-and-punctuation-运算符与分隔符" class="headerlink" title="Operators and punctuation 运算符与分隔符"></a>Operators and punctuation 运算符与分隔符</h3><p>The following character sequences represent operators (including assignment operators) and punctuation:<br>以下字符序列表示运算符，分隔符和其它特殊标记：</p>
+<blockquote>
+<p>+    &amp;     +=    &amp;=     &amp;&amp;    ==    !=    (    )  </p>
+<ul>
+<li>|     -=    |=     ||    &lt;     &lt;=    [    ]  </li>
+</ul>
+<ul>
+<li>^     *=    ^=     <->=    {    }<br>/    &lt;&lt;    /=    &lt;&lt;=    ++    =     :=    ,    ;<br>%      %=    &gt;&gt;=    –    !     …   .    :<br>&amp;^          &amp;^=</-></li>
+</ul>
+</blockquote>
+<h3 id="Integer-literals-整数字面"><a href="#Integer-literals-整数字面" class="headerlink" title="Integer literals 整数字面"></a>Integer literals 整数字面</h3><p>An integer literal is a sequence of digits representing an integer constant. An optional prefix sets a non-decimal base: 0 for octal, 0x or 0X for hexadecimal. In hexadecimal literals, letters a-f and A-F represent values 10 through 15.<br>整数字面由数字序列组成，代表整数常量 。非十进制数由这些前缀定义： 0 为八进制数前缀，0x 或 0X为十六进制数前缀。 在十六进制数字面中，字母 a-f 或 A-F 表示值10到15。</p>
+<blockquote>
+<p>int_lit     = decimal_lit | octal_lit | hex_lit .<br>decimal_lit = ( “1” … “9” ) { decimal_digit } .<br>octal_lit   = “0” { octal_digit } .<br>hex_lit     = “0” ( “x” | “X” ) hex_digit { hex_digit } .  </p>
+</blockquote>
+<blockquote>
+<p>整数字面       = 十进制数字面 | 八进制数字面 | 十六进制数字面 .<br>十进制数字面   = ( “1” … “9” ) { 十进制数字 } .<br>八进制数字面   = “0” { 八进制数字 } .<br>十六进制数字面 = “0” ( “x” | “X” ) 十六进制数字 { 十六进制数字 } .  </p>
+<p>42<br>0600<br>0xBadFace<br>170141183460469231731687303715884105727  </p>
+</blockquote>
+<h3 id="Floating-point-literals-浮点数字面"><a href="#Floating-point-literals-浮点数字面" class="headerlink" title="Floating-point literals 浮点数字面"></a>Floating-point literals 浮点数字面</h3><p>A floating-point literal is a decimal representation of a floating-point constant. It has an integer part, a decimal point, a fractional part, and an exponent part. The integer and fractional part comprise decimal digits; the exponent part is an e or E followed by an optionally signed decimal exponent. One of the integer part or the fractional part may be elided; one of the decimal point or the exponent may be elided.<br>浮点数字面由十进制浮点常量表示。 它由整数部分，小数点，小数部分和指数部分构成。整数部分与小数部分由十进制数字组成； 指数部分由一个 e 或 E 紧跟一个带可选正负号的十进制指数构成。 整数部分或小数部分可以省略；小数点或指数亦可省略。</p>
+<blockquote>
+<p>float_lit = decimals “.” [ decimals ] [ exponent ] |<br>&emsp;&emsp;&emsp;&emsp;decimals exponent |<br>&emsp;&emsp;&emsp;&emsp;”.” decimals [ exponent ] .<br>decimals  = decimal_digit { decimal_digit } .<br>exponent  = ( “e” | “E” ) [ “+” | “-“ ] decimals .  </p>
+</blockquote>
+<blockquote>
+<p>浮点数字面 = 十进制数 “.” [ 十进制数 ] [ 指数 ] |<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;十进制指数 |<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;”.” 十进制数 [ 指数 ] .<br>十进制数   = 十进制数字 { 十进制数字 } .<br>指数       = ( “e” | “E” ) [ “+” | “-“ ] 十进制数 .  </p>
+<p>\0.<br>72.40<br>072.40  // == 72.40<br>2.71828<br>1.e+0<br>6.67428e-11<br>1E6<br>.25<br>.12345E+5  </p>
+</blockquote>
+<h3 id="Imaginary-literals虚数字面"><a href="#Imaginary-literals虚数字面" class="headerlink" title="Imaginary literals虚数字面"></a>Imaginary literals虚数字面</h3><p>An imaginary literal is a decimal representation of the imaginary part of a complex constant. It consists of a floating-point literal or decimal integer followed by the lower-case letter i.<br>虚数字面由十进制复数常量的虚部表示。 它由浮点数字面或十进制整数紧跟小写字母 i 构成。</p>
+<blockquote>
+<p>imaginary_lit = (decimals | float_lit) “i” .<br>虚数字面 = (十进制数 | 浮点数字面) “i” .</p>
+<p>0i<br>011i  // == 11i<br>0.i<br>2.71828i<br>1.e+0i<br>6.67428e-11i<br>1E6i<br>.25i<br>.12345E+5i  </p>
+</blockquote>
+<h3 id="Rune-literals符文字面"><a href="#Rune-literals符文字面" class="headerlink" title="Rune literals符文字面"></a>Rune literals符文字面</h3><p>A rune literal represents a rune constant, an integer value identifying a Unicode code point. A rune literal is expressed as one or more characters enclosed in single quotes, as in ‘x’ or ‘\n’. Within the quotes, any character may appear except newline and unescaped single quote. A single quoted character represents the Unicode value of the character itself, while multi-character sequences beginning with a backslash encode values in various formats.<br>符文字面由一个符文常量表示，一个整数值确定一个Unicode码点。 一个符文字面由围绕在单引号中的一个或更多字符表示。通常一个Unicode码点作为一个或更多字符围绕在单引号中。 在引号内，除单引号和换行符外的任何字符都可出现。引号内的单个字符通常代表该字符的Unicode值自身， 而以反斜杠开头的多字符序列则会编码为不同的形式。</p>
+<p>The simplest form represents the single character within the quotes; since Go source text is Unicode characters encoded in UTF-8, multiple UTF-8-encoded bytes may represent a single integer value. For instance, the literal ‘a’ holds a single byte representing a literal a, Unicode U+0061, value 0x61, while ‘ä’ holds two bytes (0xc3 0xa4) representing a literal a-dieresis, U+00E4, value 0xe4.<br>最简单的形式就是引号内只有一个字符；由于Go源码文本是UTF-8编码的Unicode字符， 多个UTF-8编码的字节就可以表示一个单一的整数值。例如，字面 ‘a’ 包含一个字节， 表示一个字面 a，Unicode字符U+0061，值 0x61，而 ‘ä’ 则包含两个字节（0xc3 0xa4），表示一个字面 分音符-a， Unicode字符U+00E4，值 0xe4。</p>
+<p>Several backslash escapes allow arbitrary values to be encoded as ASCII text. There are four ways to represent the integer value as a numeric constant: \x followed by exactly two hexadecimal digits; \u followed by exactly four hexadecimal digits; \U followed by exactly eight hexadecimal digits, and a plain backslash \ followed by exactly three octal digits. In each case the value of the literal is the value represented by the digits in the corresponding base.<br>反斜杠转义允许用ASCII文本来编码任意值。将整数值表示为数字常量有4种方法： \x 紧跟2个十六进制数字；\u 紧跟4个十六进制数字； \U 紧跟8个十六进制数字；单个\紧跟3个八进制数字。 在任何情况下，字面的值都是其相应进制的数字表示的值。</p>
+<p>Although these representations all result in an integer, they have different valid ranges. Octal escapes must represent a value between 0 and 255 inclusive. Hexadecimal escapes satisfy this condition by construction. The escapes \u and \U represent Unicode code points so within them some values are illegal, in particular those above 0x10FFFF and surrogate halves.<br>尽管这些表示方式都会产生整数，其有效范围却不相同。八进制转义只能表示 0 到 255 之间的值。 十六进制转义则视其结构而定。转义符 \u 和 \U 表示Unicode码点， 因此其中的一些值是非法的，特别是那些大于 0x10FFFF 的值和半替代值。</p>
+<p>After a backslash, certain single-character escapes represent special values:<br>在反斜杠后，某些单字符转义表示特殊值：</p>
+<blockquote>
+<p>\a   U+0007 alert or bell<br>\b   U+0008 backspace<br>\f   U+000C form feed<br>\n   U+000A line feed or newline<br>\r   U+000D carriage return<br>\t   U+0009 horizontal tab<br>\v   U+000b vertical tab<br>\   U+005c backslash<br>\’   U+0027 single quote  (valid escape only within rune literals)<br>\”   U+0022 double quote  (valid escape only within string literals)  </p>
+</blockquote>
+<blockquote>
+<p>\a   U+0007 警报或铃声<br>\b   U+0008 退格<br>\f   U+000C 换页<br>\n   U+000A 换行<br>\r   U+000D 回车<br>\t   U+0009 横向制表<br>\v   U+000b 纵向制表<br>\   U+005c 反斜杠<br>\’   U+0027 单引号(仅在符文字面中有效)<br>\”   U+0022 双引号(仅在字符串字面中有效)  </p>
+</blockquote>
+<p>All other sequences starting with a backslash are illegal inside rune literals.<br>在符文字面中，所有其它以反斜杠开始的序列都是非法的。</p>
+<blockquote>
+<p>rune_lit         = “‘“ ( unicode_value | byte_value ) “‘“ .<br>unicode_value    = unicode_char | little_u_value | big_u_value | escaped_char .<br>byte_value       = octal_byte_value | hex_byte_value .<br>octal_byte_value = <code>\</code> octal_digit octal_digit octal_digit .<br>hex_byte_value   = <code>\</code> “x” hex_digit hex_digit .<br>little_u_value   = <code>\</code> “u” hex_digit hex_digit hex_digit hex_digit .<br>big_u_value      = <code>\</code> “U” hex_digit hex_digit hex_digit hex_digit<br>                           hex_digit hex_digit hex_digit hex_digit .<br>escaped_char     = <code>\</code> ( “a” | “b” | “f” | “n” | “r” | “t” | “v” | <code>\</code> | “‘“ | <code>&quot;</code> ) .  </p>
+</blockquote>
+<p>符文字面       = “‘“ ( unicode值 | 字节值 ) “‘“ .<br>unicode值      = unicode字符 | 小Unicode值 | 大Unicode值 | 转义字符 .<br>字节值         = 八进制字节值 | 十六进制字节值 .<br>八进制字节值   = <code>\</code> 八进制数字 八进制数字 八进制数字 .<br>十六进制字节值 = <code>\</code> “x” 十六进制数字 十六进制数字 .<br>小Unicode值    = <code>\</code> “u” 十六进制数字 十六进制数字 十六进制数字 十六进制数字 .<br>大Unicode值    = <code>\</code> “U” 十六进制数字 十六进制数字 十六进制数字 十六进制数字<br>                         十六进制数字 十六进制数字 十六进制数字 十六进制数字 .<br>转义字符       = <code>\</code> ( “a” | “b” | “f” | “n” | “r” | “t” | “v” | <code>\</code> | “‘“ | <code>&quot;</code> ) .  </p>
+<blockquote>
+<p>‘a’<br>‘ä’<br>‘本’<br>‘\t’<br>‘\000’<br>‘\007’<br>‘\377’<br>‘\x07’<br>‘\xff’<br>‘\u12e4’<br>‘\U00101234’<br>‘\’’         // rune literal containing single quote character<br>‘aa’         // illegal: too many characters<br>‘\xa’        // illegal: too few hexadecimal digits<br>‘\0’         // illegal: too few octal digits<br>‘\uDFFF’     // illegal: surrogate half<br>‘\U00110000’ // illegal: invalid Unicode code point</p>
+</blockquote>
+<h3 id="String-literals字符串字面"><a href="#String-literals字符串字面" class="headerlink" title="String literals字符串字面"></a>String literals字符串字面</h3><p>A string literal represents a string constant obtained from concatenating a sequence of characters. There are two forms: raw string literals and interpreted string literals.<br>字符串字面表示字符串常量，可通过连结字符序列获得。 它有两种形式：原始字符串字面和解译字符串字面。</p>
+<p>Raw string literals are character sequences between back quotes, as in <code>foo</code>. Within the quotes, any character may appear except back quote. The value of a raw string literal is the string composed of the uninterpreted (implicitly UTF-8-encoded) characters between the quotes; in particular, backslashes have no special meaning and the string may contain newlines. Carriage return characters (‘\r’) inside raw string literals are discarded from the raw string value.<br>原始字符串字面为反引号 <code></code> 之间的字符序列。在该引号内， 除反引号外的任何字符都是合法的。原始字符串字面的值为此引号之间的无解译（隐式UTF-8编码的）字符组成的字符串； 另外，反斜杠没有特殊意义且字符串可包含换行符。原始字符串字面中的回车符将会从原始字符串的值中丢弃。</p>
+<p>Interpreted string literals are character sequences between double quotes, as in “bar”. Within the quotes, any character may appear except newline and unescaped double quote. The text between the quotes forms the value of the literal, with backslash escapes interpreted as they are in rune literals (except that \’ is illegal and \” is legal), with the same restrictions. The three-digit octal (\nnn) and two-digit hexadecimal (\xnn) escapes represent individual bytes of the resulting string; all other escapes represent the (possibly multi-byte) UTF-8 encoding of individual characters. Thus inside a string literal \377 and \xFF represent a single byte of value 0xFF=255, while ÿ, \u00FF, \U000000FF and \xc3\xbf represent the two bytes 0xc3 0xbf of the UTF-8 encoding of character U+00FF.<br>解译字符串字面为双引号 “” 之间的字符序列。 在该引号内，不包含换行符的文本形成字面的值，反斜杠转义序列如同在符文字面中一样以相同的限制被解译 （其中\’是非法的，而 \” 是合法的）。 3位八进制（\nnn）和2位十六进制（\xnn） 转义表示字符串值的独立 字节 ；其它转义符表示（可多字节）UTF-8编码的独立 字符。 因此在字符串字面中，\377 和 \xFF 表示值为 0xFF=255的单个字节， 而ÿ、\u00FF、\U000000FF 和 \xc3\xbf 则表示UTF-8编码的字符U+00FF的两个字节0xc3 0xbf。</p>
+<blockquote>
+<p>string_lit             = raw_string_lit | interpreted_string_lit .<br>raw_string_lit         = “<code>&quot; { unicode_char | newline } &quot;</code>“ .<br>interpreted_string_lit = <code>&quot;</code> { unicode_value | byte_value } <code>&quot;</code> .<br>字符串字面     = 原始字符串字面 | 解译字符串字面 .<br>原始字符串字面 = “<code>&quot; { unicode字符 | 换行符 } &quot;</code>“ .<br>解译字符串字面 = <code>&quot;</code> { unicode值 | 字节值 } <code>&quot;</code> .  </p>
+</blockquote>
+<blockquote>
+<p><code>abc</code>                // same as “abc”<br><code>\n  
+\n</code>                  // same as “\n\n\n”<br>“\n”<br>“\””                 // same as <code>&quot;</code><br>“Hello, world!\n”<br>“日本語”<br>“\u65e5本\U00008a9e”<br>“\xff\u00FF”<br>“\uD800”             // illegal: surrogate half<br>“\U00110000”         // illegal: invalid Unicode code point  </p>
+</blockquote>
+<p>These examples all represent the same string:<br>这些例子都表示相同的字符串：</p>
+<blockquote>
+<p>“日本語”                                 // UTF-8 input text<br><code>日本語</code>                                 // UTF-8 input text as a raw literal<br>“\u65e5\u672c\u8a9e”                    // the explicit Unicode code points<br>“\U000065e5\U0000672c\U00008a9e”        // the explicit Unicode code points<br>“\xe6\x97\xa5\xe6\x9c\xac\xe8\xaa\x9e”  // the explicit UTF-8 bytes  </p>
+</blockquote>
+<p>If the source code represents a character as two code points, such as a combining form involving an accent and a letter, the result will be an error if placed in a rune literal (it is not a single code point), and will appear as two code points if placed in a string literal.<br>如果源码将两个码点表示为一个字符，例如包含着重号和字母的结合形式， 那么将它放置在符文字面中就会产生一个错误（它不是单一码点），而放置在字符串字面中则会显示为两个码点。</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Notation记法"><span class="toc-text">Notation记法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Source-code-representation-源码的表示"><span class="toc-text">Source code representation 源码的表示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Characters-字符"><span class="toc-text">Characters 字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Letters-and-digits字母和数字"><span class="toc-text">Letters and digits字母和数字</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lexical-elements-词法元素"><span class="toc-text">Lexical elements 词法元素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tokens标记"><span class="toc-text">Tokens标记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Semicolons分号"><span class="toc-text">Semicolons分号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Identifiers-标识符"><span class="toc-text">Identifiers 标识符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Operators-and-punctuation-运算符与分隔符"><span class="toc-text">Operators and punctuation 运算符与分隔符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Integer-literals-整数字面"><span class="toc-text">Integer literals 整数字面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Floating-point-literals-浮点数字面"><span class="toc-text">Floating-point literals 浮点数字面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Imaginary-literals虚数字面"><span class="toc-text">Imaginary literals虚数字面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rune-literals符文字面"><span class="toc-text">Rune literals符文字面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#String-literals字符串字面"><span class="toc-text">String literals字符串字面</span></a></li></ol></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: TinsonChan</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://tinsonchan.github.io/2019/04/11/Go编程语言规范/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/翻译/"><i class="fa fa-tags"></i>翻译</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title"></h5>
+        
+          <span class="site-footer-item">
+            <a href="" target="_self"></a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: tinsonchan@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="javascript:void(0);" data-enable="false">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2018/10/13/electron开篇/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Tinson Chan">
+  
+  
+  <title>如何部署svn服务器 | Tinson&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="技术,svn,">
+  
+
+  
+  <meta name="description" content="时间过的好快呀，一眨眼又是一个月过去了，距离上次写日志已经是一个月了。最近在研究svn服务器的东西，主要是为了让多人协助的时候，可以很好的做一个权限控制。虽然git也是挺好用的，但是权限控制还是不够，毕竟站在公司角度，还是希望这方面可以做的比较好一点。所以最近在自己购买的搬瓦工的机器上实验了一下，还是可以的，呵呵呵。现在有一种强迫症，就是一个东西开始了，就必须强迫自己完成，不能再像之前那样做到一半就放弃了。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz","appkey":"5xXphnQdhWsutu4Ix4cGB0EW","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2018-05-30",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "Tinson Chan",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">TINSON</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 按照计划一步步往前走</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tinsonchan/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-07-24
+    </span>
+    
+      <span>
+        | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    如何部署svn服务器
+  </h1>
+  
+  <article class="passage-article">
+    <br>下面开始备注一下部署svn的一个过程。<p></p>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><ol>
+<li>购买一台云机器，当然Windows也是可以的，如果用于内网就完全没问题。本人的机器是搬瓦工上面的，主要是够便宜，买了做vpn用的，想不到居然还可以用来做这个实验。</li>
+<li><p>安装系统，这里主要是用centos</p>
+<p> [root@host ~]# uname -a<br> Linux host.localdomain 2.6.32-642.el6.i686 #1 SMP Tue May 10 16:13:51 UTC 2016 i686 i686 i386 GNU/Linux</p>
+</li>
+<li>重启服务器，准备开始工作了</li>
+</ol>
+<h3 id="安装apache"><a href="#安装apache" class="headerlink" title="安装apache"></a>安装apache</h3><pre><code>[root@host ~]#yum install httpd httpd-devel
+[root@host ~]#service httpd start
+[root@host ~]#chkconfig httpd on
+
+//修改apache端口
+[root@host ~]#vi /etc/httpd/conf/httpd.conf
+//用 &quot;/ServerName&quot;搜索，可以快速定位
+//增加这一行内容ServerName localhost:80
+
+//打开防火墙的80端口
+[root@host ~]#vi /etc/sysconfig/iptables
+//增加一行&quot;-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT&quot;
+[root@host ~]#service iptables restart
+</code></pre><p>到这里，apache已经安全成功了<br>可以打开网址 <a href="http://ip看看有没有能够打开apache的默认页面" target="_blank" rel="noopener">http://ip看看有没有能够打开apache的默认页面</a></p>
+<h3 id="安装svn服务"><a href="#安装svn服务" class="headerlink" title="安装svn服务"></a>安装svn服务</h3><p>安装svn服务 </p>
+<pre><code>[root@host ~]#yum install mod_dav_svn subversion
+</code></pre><p>漫长的等待安装，然后重启apache</p>
+<pre><code>[root@host ~]#service httpd restart
+</code></pre><p>查看是否安装svn模块</p>
+<pre><code>[root@host ~]#ls /etc/httpd/modules/ | grep svn
+</code></pre><p>查看svn版本</p>
+<pre><code>[root@host ~]#svn --version
+</code></pre><p>创建svn主目录</p>
+<pre><code>[root@host ~]#mkdir /data/svn/
+[root@host ~]#cd /etc/httpd/conf.d
+</code></pre><p>在这个目录下，有一个subversion.conf的配置文件，需要增加以下内容</p>
+<pre><code>[root@host ~]#vi subversion.conf
+&lt;Location /svn/&gt;
+DAV svn
+SVNListParentPath on
+SVNParentPath /data/svn
+AuthType Basic
+AuthName &quot;Subversion repositories&quot;
+AuthUserFile /data/svn/passwd.http
+AuthzSVNAccessFile /data/svn/authz
+Require valid-user
+&lt;/Location&gt;
+RedirectMatch ^(/data/svn)$ $1/
+</code></pre><p>创建/data/svn/passwd.http和/data/svn/authz<br>    [root@host ~]#touch /svn/passwd.http<br>    [root@host ~]# touch /svn/authz</p>
+<p>重启apache</p>
+<pre><code>[root@host ~]# service httpd restart
+</code></pre><h3 id="安装jsvnadmin"><a href="#安装jsvnadmin" class="headerlink" title="安装jsvnadmin"></a>安装jsvnadmin</h3><p>svnadmin是一个java版本的svn管理可视化工具，方便我们多个版本控制</p>
+<pre><code>https://code.google.com/p/jsvnadmin/
+</code></pre><p>现在最新版本是3.0.5版本，可以去下载</p>
+<h3 id="安装Mysql"><a href="#安装Mysql" class="headerlink" title="安装Mysql"></a>安装Mysql</h3><p>是的，需要数据库，jsvnadmin支持多个数据库，不过习惯用mysql，就继续用了</p>
+<p>查看该操作系统上是否已经安装了mysql数据库，</p>
+<pre><code>[root@host ~]#rpm -qa | grep MySQL
+
+[root@host ~]# installmysql-server mysql mysql-devel
+[root@host ~]# service mysqld start ##启动数据库
+</code></pre><p>查看MySQL是否设置开机启动</p>
+<pre><code>[root@host ~]# chkconfig --list| grep mysqld 
+mysqld          0:off   1:off  2:off   3:off   4:off  5:off   6:off
+</code></pre><p>设置开启启动</p>
+<pre><code>[root@host ~]# chkconfig mysqld on
+</code></pre><p>因为整个库管理是用网页打开的，所以需要打开防火墙端口</p>
+<pre><code>[root@host ~]#vi /etc/sysconfig/iptables
+//增加一行&quot;-A INPUT -p tcp -m state --state NEW -m tcp --dport 3060 -j ACCEPT&quot;
+//重启防火墙
+[root@host ~]#service iptables restart
+</code></pre><p>设置MySQL数据库root用户的密码：</p>
+<pre><code>[root@host ~]# mysqladmin -uroot password &apos;root&apos;
+</code></pre><p>登陆数据库</p>
+<pre><code>[root@host ~]# mysql -u root -p
+</code></pre><p>授权远程登陆</p>
+<pre><code>grant all privileges  on *.* to root@&apos;%&apos; identified by &quot;root&quot;;
+flush privileges;
+</code></pre><p>创建需要的数据库以及导入数据</p>
+<pre><code>mysql&gt; create database svnadmin;
+mysql&gt; use svnadmin;
+mysql&gt; source /svnadmin/db/mysql5.sql //svnadmin自带的数据库脚本呢
+mysql&gt; source /svnadmin/db/en/lang/en.sql
+</code></pre><h3 id="安装jdk"><a href="#安装jdk" class="headerlink" title="安装jdk"></a>安装jdk</h3><p>查看存在的jdk的版本</p>
+<pre><code>[root@host ~]#yum search java|grep jdk
+[root@host ~]#yum install java-1.7.0-openjdk
+</code></pre><p>设置环境变量</p>
+<pre><code>[root@host ~]#vi /etc/profile
+#set java environment
+JAVA_HOME=/usr/java/jdk1.7.0_79
+JRE_HOME=/usr/java/jdk1.7.0_79/jre
+CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+export JAVA_HOME JRE_HOME CLASS_PATH PATH
+</code></pre><p>让环境变量生效<br>    [root@host ~]#source /etc/profile</p>
+<h3 id="使用Tomcat部署svnadmin"><a href="#使用Tomcat部署svnadmin" class="headerlink" title="使用Tomcat部署svnadmin"></a>使用Tomcat部署svnadmin</h3><p>下载tomcat的包</p>
+<pre><code>[root@host ~]#wget http://mirrors.hust.edu.cn/apache/tomcat/tomcat-7/v7.0.90/bin/apache-tomcat-7.0.90.tar.gz
+</code></pre><p>解压tomcat包    </p>
+<pre><code>[root@host ~]#tar -zxvf apache-tomcat-7.0.90.tar.gz
+[root@host ~]# mv apache-tomcat-7.0.90 svnadmin-tomcat
+
+[root@host ~]#cd /root/svnadmin-tomcat/webapps
+[root@host ~]#rm -rf *
+</code></pre><p>把svnadmin.war上传到webapps</p>
+<pre><code>[root@host ~]# cd /root/svnadmin-tomcat/webapps
+[root@host ~]# unzip svnadmin.war -d svnadmin
+[root@host ~]# cd svnadmin/WEB-INF
+[root@host ~]# vi jdbc.properties
+</code></pre><p>修改配置内容</p>
+<pre><code>db=MySQL
+#MySQL
+MySQL.jdbc.driver=com.mysql.jdbc.Driver
+MySQL.jdbc.url=jdbc:mysql://127.0.0.1:3306/svnadmin?characterEncoding=utf-8
+MySQL.jdbc.username=root
+MySQL.jdbc.password=root
+</code></pre><p>启动svnadmin-tomcat</p>
+<pre><code>[root@host ~]# /root/svnadmin-tomcat/bin/startup.sh
+</code></pre><h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>在浏览器中打开地址就可以了</p>
+<pre><code>http://ip:9000/svnadmin/
+</code></pre><p>注意：在项目管理中，url路径是不需要带上端口的，我在这里纠结了好久好久，也是醉了</p>
+<pre><code>项目：MiniGame  类型：http(多库)
+路径:/data/svn/MiniGame
+URl:http://ip/svn/MiniGame
+</code></pre><p>参考链接：</p>
+<pre><code>https://www.cnblogs.com/hujihon/p/5679611.html
+https://code.google.com/archive/p/jsvnadmin/downloads
+https://www.linuxidc.com/Linux/2016-09/134941.htm
+https://www.linuxidc.com/Linux/2017-12/149716.htm
+</code></pre><hr>
+<p>追求卓越 成功就会在不经意间追上你</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#准备工作"><span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装apache"><span class="toc-text">安装apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装svn服务"><span class="toc-text">安装svn服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装jsvnadmin"><span class="toc-text">安装jsvnadmin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Mysql"><span class="toc-text">安装Mysql</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装jdk"><span class="toc-text">安装jdk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Tomcat部署svnadmin"><span class="toc-text">使用Tomcat部署svnadmin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#最后"><span class="toc-text">最后</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: TinsonChan</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://tinsonchan.github.io/2018/07/24/如何部署svn服务器/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/svn/"><i class="fa fa-tags"></i>svn</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title"></h5>
+        
+          <span class="site-footer-item">
+            <a href="" target="_self"></a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: tinsonchan@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/2018/07/24/程序员修养读后感/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2018/06/28/2018上半年小结/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

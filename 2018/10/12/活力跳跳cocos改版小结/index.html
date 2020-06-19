@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Tinson Chan">
+  
+  
+  <title>hltt-cocos改版小结 | Tinson&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="技术,">
+  
+
+  
+  <meta name="description" content="本来是在维护自己一直在做的小游戏，突然接到电话，需要去对hltt游戏进行cocos的改写，虽然没正式用过cocos creator来写游戏，但是之前也看过一下，应该没问题的，撸起袖子干。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz","appkey":"5xXphnQdhWsutu4Ix4cGB0EW","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2018-05-30",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "Tinson Chan",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">TINSON</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 按照计划一步步往前走</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tinsonchan/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-10-12
+    </span>
+    
+      <span>
+        | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    hltt-cocos改版小结
+  </h1>
+  
+  <article class="passage-article">
+    <br>由于中间隔了一个国庆，所以就断断续续的完成了，而自己的心好想也一直没有收回来。<br>说一下整个开发过程中的事情吧：<p></p>
+<h3 id="引擎学习使用"><a href="#引擎学习使用" class="headerlink" title="引擎学习使用"></a>引擎学习使用</h3><p>之前就已经浏览过一轮cocos的内容了，主要有几个方面：<br>1.ts的使用<br>现在看到的demo或者游戏大部分都是js写的，但是在使用egret的前提下，深深的爱上了ts，主要是代码提示和重构的优势，所以还是坚决的使用了ts语言。<br>2.组件的使用<br>其实cocos creator的前期开发和unity有点类似，毕竟也是写过两年的unity，所以还是能够比较适应这种开发模式的。主要使用了几种组件：<br>  1.label<br>  2.sprite<br>  3.AudioClip<br>  4.SpriteAtlas<br>  5.Animation<br>  还有一些其他的功能<br>  1.定时器<br>  2.动画</p>
+<h3 id="框架搭建"><a href="#框架搭建" class="headerlink" title="框架搭建"></a>框架搭建</h3><p>  框架也不算完全从零开始，主要基于以前的一个unity项目还有kyle给过来的一个工程，另外还参考了by的一个框架。<br>  主要有几部分内容：<br>  1.事件<br>  2.日志<br>  3.UI管理器<br>  还有很多内容没加上的<br>  1.socket<br>  2.缓存池<br>  。。。</p>
+<h3 id="游戏开发"><a href="#游戏开发" class="headerlink" title="游戏开发"></a>游戏开发</h3><p>  因为要快速开发，所以大部分代码还是直接从laya那边搬过来就用了，更多的是做cocos平台的适配，所以很多时候看到他们的代码像屎一样，却无法根治，还好代码是用ts写的，后面重构还是挺方便的。</p>
+<h3 id="游戏优化"><a href="#游戏优化" class="headerlink" title="游戏优化"></a>游戏优化</h3><p>  游戏基本上开发就一周时间，其他主要还是做优化，主要是一个奇葩的问题，就是帧率是满的，但是玩起来却卡卡的，跟kyle讨论一下，发现是游戏节奏的问题，另外就是动画的处理，在触发新动画的时候，一定要不全部旧动画删除，不然就会出现时序的奇葩问题。</p>
+<h3 id="游戏提审上线"><a href="#游戏提审上线" class="headerlink" title="游戏提审上线"></a>游戏提审上线</h3><p>  说起上线，也是一把泪啊，这次主要上线某个著名平台，一开始是说全力支持，发现到最后，却是自问自答，哎。</p>
+<p>cocos版本hltt完成，接下来回归开发主线，另外要优化这套框架。</p>
+<hr>
+<p>追求卓越 成功就会在不经意间追上你</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#引擎学习使用"><span class="toc-text">引擎学习使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#框架搭建"><span class="toc-text">框架搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏开发"><span class="toc-text">游戏开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏优化"><span class="toc-text">游戏优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#游戏提审上线"><span class="toc-text">游戏提审上线</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: TinsonChan</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://tinsonchan.github.io/2018/10/12/活力跳跳cocos改版小结/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title"></h5>
+        
+          <span class="site-footer-item">
+            <a href="" target="_self"></a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: tinsonchan@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/2018/10/13/electron开篇/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2018/08/16/如何在vsCode上搭建go开发环境/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>

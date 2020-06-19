@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  <meta name="author" content="Tinson Chan">
+  
+  
+  <title>物理球球小游戏开发过程中遇到的问题 | Tinson&#39;s Blog</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="技术,小游戏,">
+  
+
+  
+  <meta name="description" content="从过年回来到现在，不知不觉接触白鹭已经有三四个月了，而这段时间也把《物理弹球正版》的h5版本做起来了，不说收益，只说活跃用户的化，我也满足了，日活百万，这是工作这么久做的第一款这么多人玩的游戏。项目从一个人到多个人，从一个简单的小游戏到现在的集合多个系统模块的游戏，现在维护起来有一定的困难，合作也不是特别的流畅，所以这里把这一个过程捋一下，也算是给自己一个教训吧。">
+
+  
+
+  
+    <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.1/dist/av-min.js" async></script>
+  
+
+  
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" async></script>
+  
+
+  
+    <script src="//unpkg.com/valine/dist/Valine.min.js" async></script>
+  
+
+  
+
+  <script>
+  // theme-ad's config script
+  // it can be used in every script
+  
+  window.AD_CONFIG = {
+    leancloud: {"appid":"vWc3lBHwf3rkmTvz7kalcLw8-gzGzoHsz","appkey":"5xXphnQdhWsutu4Ix4cGB0EW","comment":true,"count":true},
+    welcome: {"enable":false,"interval":30},
+    start_time: "2018-05-30",
+    passwords: ["efe07af7441da2b69c4a41e42e73be4db47f66010a56900788a458354a7373ec", ],
+    is_post: true,
+    lock: false,
+    author: "Tinson Chan",
+    share: {"twitter":true,"facebook":true,"weibo":true,"qq":true,"wechat":true},
+    mathjax: true,
+    page_type: "",
+    root: "/"
+  };
+</script>
+
+  <script src="/vendor/sha256.min.js"></script>
+<script src="/js/auth.js"></script>
+<script src="/js/index.js"></script>
+<script src="/vendor/qrcode.min.js"></script>
+
+  
+    <link rel="icon" href="/images/avatar.jpg">
+    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+  
+
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/styles/components/highlight/highlight.css">
+
+  
+</head>
+  <body>
+    <header class="site-header">
+  <div class="site-header-brand">
+    
+      <span class="site-header-brand-title">
+        <a href="/">TINSON</a>
+      </span>
+    
+    
+      <span class="site-header-brand-motto"> | 按照计划一步步往前走</span>
+    
+  </div>
+  <div class="site-header-right">
+    <nav class="site-header-navigation">
+      
+        <a href="/" target="_self">首页</a>
+      
+        <a href="/archives/" target="_self">归档</a>
+      
+        <a href="/tags/" target="_self">标签</a>
+      
+        <a href="/categories/" target="_self">分类</a>
+      
+        <a href="/about/" target="_self">关于</a>
+      
+    </nav>
+    <div class="site-header-btn">
+      
+        <a href="https://github.com/tinsonchan/" target="_blank" id="site-github">
+          <i class="fa fa-github-alt"></i>
+        </a>
+      
+      <a href="javascript:void(0);" id="site-search">
+        <i class="fa fa-search"></i>
+      </a>
+      <a href="javascript:void(0);" id="site-nav-btn">
+        <i class="fa fa-ellipsis-v"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<nav class="table-content" id="site-nav">
+  <div class="table-content-title">
+    <span>导航</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc">
+      
+        <li class="toc-item">
+          <a href="/" target="_self">
+            首页
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/archives/" target="_self">
+            归档
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/tags/" target="_self">
+            标签
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/categories/" target="_self">
+            分类
+          </a>
+        </li>
+      
+        <li class="toc-item">
+          <a href="/about/" target="_self">
+            关于
+          </a>
+        </li>
+      
+    </ol>
+  </div>
+</nav>
+<div id="site-process"></div>
+    <main>
+      
+  <div class="passage">
+  <div class="passage-meta">
+    <span>
+      <i class="fa fa-calendar"></i>2018-06-05
+    </span>
+    
+      <span>
+        | <a href="/categories/technics/"><i class="fa fa-bookmark"></i>技术</a>
+      </span>
+    
+    
+      <span>
+        | <i class="fa fa-unlock-alt"></i>UNLOCK
+      </span>
+    
+  </div>
+  <h1 class="passage-title">
+    物理球球小游戏开发过程中遇到的问题
+  </h1>
+  
+  <article class="passage-article">
+    <p></p>
+<h3 id="技术的选择"><a href="#技术的选择" class="headerlink" title="技术的选择"></a>技术的选择</h3><p>在开发这款游戏之前，我没做过任何相关的h5游戏，而基于自己对h5的一点点兴趣，也对着方面有一点的关注，只是没有很深入的理解。也没有实际的应用。基于老板的一个需求，纯粹的一个需求，没有技术的强制性要求。<br>对于一个程序员而言，肯定是对目前比较好的几个引擎做一番比较，主要包括cocos-js，egret，laya这三款国内比较出名的引擎，我会从几个方面比较：<br>1.门槛如何，因为这个会决定使用人群的数量以及后面扩展的问题<br>2.技术是否满足需求<br>3.是否很方便的打出多个版本<br>4.是否是一门方便使用的语言</p>
+<p>综合以上几个因素，我选择了白鹭egret，因为这个我觉得任何一个实习生花几天时间就可以入门了，其次它可以帮我们打出h5原生，微信，qq玩一玩，fb多个平台的版本，再者就是typescript语言，可以在开发的编译过程我就发现错误。</p>
+<h3 id="白鹭的使用"><a href="#白鹭的使用" class="headerlink" title="白鹭的使用"></a>白鹭的使用</h3><p>这部分主要是说明一下自己在使用白鹭的过程。<br>1.入门。按照官方的文档，一步步的创建项目，然后初步把一个项目跑起来。<br>2.eui。这是一个很重要的一部分，会影响你后面开发是否很便利。这个用起来还好，但是还不是十分的流畅。而有一个第三方的插件，好像叫fairgui，试了一下，这个会比官方的好用一点吧，但是知道这个的时候，项目已经开展起来了，只能放到后面去了。<br>3.物理引擎的使用。官方推荐的是p2。但是在项目搭建起来的时候，整体的效果并不是十分的理想，此时想着要么优化物理引擎，要么就是换掉它。优化，我的能力达不到这种标准，只能寄望于第二种想法了。在论坛搜了一下，发现很多人提到了matter，于是尝试去把这个集合起来。这过程有点痛苦，但是最后的效果还是不错的，起码玩起来很爽。</p>
+<h3 id="项目的发布"><a href="#项目的发布" class="headerlink" title="项目的发布"></a>项目的发布</h3><p>项目发布了，我们选择微信小游戏平台，这里一路走来也是泪流满面呀。我们被独代了，可以抱大腿了。但是也是考验的时刻到了，各种优化需求，各种数据调整，还有各种新的需求的加入，整个人被透支了，连续好多天都是到两三点，甚至三四点才能休息，这时候感觉整个人都要奔溃了。<br>此时老板说，招了一个主程，后面会加入到这个项目的开发。另外就是派了一个架构师级别的人来帮忙。此时，技术开发由原来的一个我变成了三个人，据说后面还会陆续加入两个小伙伴。<br>此时项目组的弊端暴露得清清楚楚了：<br>1.项目一定要有一个清晰的框架，因为你不知道你的项目是不是真的是小游戏，也许会被发展成一个庞然大物，此时如果没有框架，耦合度非常高导致整个项目寸步难移，难以往下发展。<br>2.一定要有一个清晰的分工，不然因为人员的加入，有可能几个人同时解决一个问题，而某些问题却没有人解决。<br>3.一定要有一个清晰的目标，明确到什么时候会封板，而接下来的开发分别在哪个分支上处理。这是非常重要的，不然会引起工作的混乱。而版本也无法出来。<br>4.重构的工作，一定是让对项目十分清晰的人去处理的，不然会重构出一大推bug，导致整个项目问题更多。</p>
+<h3 id="下一个项目的规划"><a href="#下一个项目的规划" class="headerlink" title="下一个项目的规划"></a>下一个项目的规划</h3><p>1.技术的选择，有可能继续还是白鹭，也可能会扩散到其他家，cocos，laya，或者国外的phaser<br>2.框架选择，一定是一个明确的mvc框架，至于服务器，我想选择go的leaf框架<br>3.版本控制，基于公司的原因，继续使用svn，不过私下会以git作为辅助开发的。<br>4.游戏类型，一定是联网的，兼容单机玩法，不然跟不上技术的发展了。</p>
+<hr>
+<p>追求卓越 成功就会在不经意间追上你</p>
+  </article>
+  <aside class="table-content" id="site-toc">
+  <div class="table-content-title">
+    <i class="fa fa-arrow-right fa-lg" id="site-toc-hide-btn"></i>
+    <span>目录</span>
+  </div>
+  <div class="table-content-main">
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#技术的选择"><span class="toc-text">技术的选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#白鹭的使用"><span class="toc-text">白鹭的使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#项目的发布"><span class="toc-text">项目的发布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#下一个项目的规划"><span class="toc-text">下一个项目的规划</span></a></li></ol>
+  </div>
+</aside>
+  
+    <aside class="passage-copyright">
+      <div>本文作者: TinsonChan</div>
+      
+        <div>
+          原文链接: 
+          <a href="" target="_blank">https://tinsonchan.github.io/2018/06/05/物理球球小游戏开发过程中遇到的问题/</a>
+        </div>
+      
+      <div>
+        版权声明: 本博客所有文章除特别声明外, 均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议. 转载请注明出处!
+      </div>
+    </aside>
+  
+  
+    <div class="passage-tags">
+     
+      <a href="/tags/小游戏/"><i class="fa fa-tags"></i>小游戏</a>
+    
+    </div>
+  
+</div>
+
+    </main>
+    
+      
+<div class="site-comment-contanier" data-plateform="leancloud">
+  
+    <p id="site-comment-info">
+      <i class="fa fa-spinner fa-spin"></i> 评论加载中
+    </p>
+    <div id="site-comment"></div>
+  
+</div>
+    
+    <div class="site-footer-wrapper">
+  <footer class="site-footer">
+    
+      <div class="site-footer-col">
+        <h5 class="site-footer-title"></h5>
+        
+          <span class="site-footer-item">
+            <a href="" target="_self"></a>
+          </span>
+        
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-clock-o"></i> 本站已稳定运行<span id="site-time"></span>
+    </div>
+    
+      <div class="site-footer-info">
+        <i class="fa fa-paw"></i> 您是本站第 <span id="site-count"></span> 位访客
+      </div>
+    
+    
+      <div class="site-footer-info">
+        <i class="fa fa-at"></i> Email: tinsonchan@163.com
+      </div>
+    
+    <div class="site-footer-info">
+      <i class="fa fa-copyright"></i> 
+      2019 <a href="https://github.com/dongyuanxin/theme-ad/" target="_blank">Theme-AD</a>.
+      Created by <a href="https://godbmw.com/" target="_blank">GodBMW</a>.
+      All rights reserved.
+    </div>
+  </footer>
+</div>
+    <div id="site-layer" style="display:none;">
+  <div class="site-layer-content">
+    <div class="site-layer-header">
+      <span class="site-layer-header-title" id="site-layer-title"></span>
+      <i class="fa fa-close" id="site-layer-close"></i>
+    </div>
+    <div class="site-layer-body" id="site-layer-container">
+      <div class="site-layer-input" id="site-layer-search" style="display: none;">
+        <input type="text">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="site-layer-reward" id="site-layer-reward" style="display: none;">
+        
+          <div>
+            <img src="/" alt="WeChat">
+            
+              <p>WeChat</p>
+            
+          </div>
+        
+          <div>
+            <img src="/" alt="AliPay">
+            
+              <p>AliPay</p>
+            
+          </div>
+        
+      </div>
+      <div id="site-layer-welcome" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+    
+
+<div class="bottom-bar">
+  <div class="bottom-bar-left">
+    <a href="/2018/06/28/2018上半年小结/" data-enable="true">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <a href="/2018/06/02/如何建立一个在多台机器上可维护的github博客/" data-enable="true">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+  </div>
+  <div class="bottom-bar-right">
+    <a href="javascript:void(0);" data-enable="true" id="site-toc-show-btn">
+      <i class="fa fa-bars"></i>
+    </a>
+    
+      <a href="#site-comment" data-enable="true">
+        <i class="fa fa-commenting"></i>
+      </a>
+    
+    <a href="javascript:void(0);" id="site-toggle-share-btn">
+      <i class="fa fa-share-alt"></i>
+    </a>
+    <a href="javascript:void(0);" id="site-reward">
+      <i class="fa fa-thumbs-up"></i>
+    </a>
+    <a href="javascript:void(0);" id="back-top-btn">
+      <i class="fa fa-chevron-up"></i>
+    </a>
+  </div>
+</div>
+    <div id="share-btn">
+  
+    <a id="share-btn-twitter" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-twitter"></i>
+    </a>
+  
+  
+    <a id="share-btn-facebook" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-facebook"></i>
+    </a>
+  
+  
+    <a id="share-btn-weibo" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-weibo"></i>
+    </a>
+  
+  
+    <a id="share-btn-qq" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-qq"></i>
+    </a>
+  
+  
+    <a id="share-btn-wechat" href="javascript:void(0);" target="_blank">
+      <i class="fa fa-wechat"></i>
+    </a>
+  
+</div>
+    
+
+
+
+
+
+    
+  </body>
+</html>
