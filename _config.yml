@@ -94,7 +94,9 @@ theme: yilia-plus
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: git
+  repository: git@github.com:tinsonchan/tinsonchan.github.io.git
+  branch: master
 
 jsonContent:
   file: content.json
@@ -130,3 +132,4 @@ feed:
 filter_image:
    # 日志是否启用
    #   log: true
+
